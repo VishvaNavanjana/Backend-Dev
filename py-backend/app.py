@@ -11,9 +11,9 @@ flowers = {0: "setosa", 1: "versicolor", 2: "virginica"}
 def testPYBackend():
     return 'Python backend is running !!!'
 
-@app.route('/getRandomNumber')
+@app.route('/getRandomNumber', methods=['GET'])
 def serveRandomNumber():
-    return str(random.randint(0, 100))
+    return "random number generated from flask server :" + str(random.randint(0, 100))
 
 @app.route('/flower', methods=["POST"])
 def flower():
