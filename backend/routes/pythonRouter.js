@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+// const request = require('request');
+const axios = require('axios');
 
 const pythonRouter = express.Router();
+
+pythonRouter.use(bodyParser.json());
 
 //for python endpoint
 pythonRouter.route('/')
@@ -11,21 +15,19 @@ pythonRouter.route('/')
     next();
 })
 .get((req,res,next) => {
-    res.end('Send two numbers in JSON file to Multiply');
+
+    axios.get('http://127.0.0.1:5000/getRandomNumber')
+    .then((responseFromPython) => {
+        console.log(responseFromPython.data);
+        res.send({number: responseFromPython.data})
+    })
 })
 .post((req,res,next) => {
-    /* ---------------------------
-    JSON object should be
-    {
-        "num1": int,
-        "num2": int
-    }
-    When receive JSON object,
-    pass the two numbers to python backend and get the result
-    Then send the result to client
-    --------------------------- */
-    
-    res.end('Sum of two: ' + req.body.num1 +' + '+  req.body.num2 +" = " + (req.body.num1 + req.body.num2));
+    axios.post('http://127.0.0.1:5000/flower', req.body)
+    .then((responseFromPython) => {
+        res.send({prediction: responseFromPython.data});
+    });
+
 })
 .put((req,res,next) => {
     res.statusCode = 403;
